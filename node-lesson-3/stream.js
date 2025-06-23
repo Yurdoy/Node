@@ -1,13 +1,15 @@
 const fs = require("fs");
 
-const stream = fs.createWriteStream("outputStream.txt", "utf8");
-stream.write("firstString\n");
-stream.write("secondString\n");
-stream.write("thirdString\n");
-stream.end();
-stream.on("finish", () => {
-  console.log("File was successfully written");
+const readStream = fs.createReadStream("inputStream.txt", "utf8");
+
+readStream.on("data", (chunk) => {
+  console.log("Chunk received", chunk);
 });
-stream.on("error", () => {
-  console.log("error");
+
+readStream.on("end", () => {
+  console.log("File reading completed.");
+});
+
+readStream.on("error", (err) => {
+  console.error("Error during reading file:", err);
 });
