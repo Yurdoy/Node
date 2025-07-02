@@ -1,0 +1,25 @@
+{
+  "name": "lesson-9",
+  "version": "1.0.0",
+  "description": "1. npm init -y 2. npm i express dotenv sequelize sequelize-cli mysql2 npm i -D nodemon  3. Настройка package.json: ставим type: module   \"scripts\": {     \"dev\": \"nodemon app.js\"   },   убедитесь, что нодмон находится в devDependencies 4. инициализируем работу ORM npx sequelize-cli init 5. Появится config, migrations, models, seeders (можно удалить) заходим в config.json, там устанавливаем значения подключения к вашу mySql серверу (внимательно протестируйте подключение через workBench) 6. Создаем db.js внутри config папки import { Sequelize } from \"sequelize\"; import fs from \"fs\"; const configData = JSON.parse(fs.readFileSync(new URL('./config.json', import.meta.url))); //С 22 версии не работает assert // import configData from './config.json' assert {type: 'json'} const env = 'development' const config = configData[env] const sequelize = new Sequelize(     config.database,     config.username,     config.password,     {         host: config.host,         dialect: config.dialect     } ) export default sequelize 7. Инициализуем сервер с подключением к бд через ОРМ import express from 'express' import 'dotenv/config' const app = express() app.use(express.json()) const PORT = process.env.PORT || 3333",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "dotenv": "^17.0.0",
+    "express": "^5.1.0",
+    "mysql2": "^3.14.1",
+    "sequelize": "^6.37.7",
+    "sequelize-cli": "^6.6.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
