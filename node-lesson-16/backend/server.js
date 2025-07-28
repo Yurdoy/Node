@@ -37,6 +37,35 @@ app.post("/register", async (req, res) => {
   }
 });
 
+app.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const existingUser = await User.findOne({ email });
+    if (!existingUser) {
+      return res.status(400).json({ error: "Invalid credentials" });
+    }
+
+    const isMatch = await bcrypt.compare(password, existingUser.password);
+    if (!isMatch) {
+      res.status(404).json({ message: "Invalid password" });
+    }
+
+    const token = jwt.sign(
+      {
+        id: existingUser.id,
+        email: existingUser.email,
+        lastname: existingUser.lastname,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+    res.json({ message: "Token successfully created", token });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 connectDb();
 
 app.listen(PORT, () => {
